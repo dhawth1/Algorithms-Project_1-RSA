@@ -1,37 +1,39 @@
 import math
 import random
 
- 
-p = 7
-q = 17
-n=p*q
-e = 5
-wp=(p-1)*(q-1)
-d=77
 
-def generatePrime():
+
+def generatePrime(k):
+    s="1st"
+    while True:
+        n = random.randint(2, 100)
+        if(fermatTest(n,300)):
+            return n
+    # Fermat's little theorem
+            
+
+def fermatTest(n,k):
+    for i in range(k):             
+        a = random.randint(1, n-1)   
+        if pow(a, n - 1, n) != 1:
+            return False
+                
+
+    return True
+                    
+         
+    
+
+def generateE(m):
    
     while True:
              
-            a = random.randint(1000000, 9999999999)
-               
-            # Fermat's little theorem
-            if pow(a, n - 1, n) == 1:
-                break
-            
-    return a
+        a = random.randint(2, 100)
+        if math.gcd(a,m)== 1:
+            return a
 
-def generateE(e,y):
-   
-    while True:
-             
-            a = random.randint(2, 100)
-            y=(p-1)*(q-1)
-            # Fermat's little theorem
-            if math.gcd(a,y)== 1:
-                break
             
-    return a
+    
 def extended_gcd(a=1, b =1):
     if b == 0:
         return (1, 0, a)
@@ -53,14 +55,47 @@ def fastExpo_recursive(a, p, n):
         return a *(t**2%n)%n
 
  
-def encrypt(me):
-    en = math.pow(me,e)
-    c = en % n
-    # c=fastExpo_recursive(me,e,n) 
-    c=pow(me,d,n) 
+def encrypt(me,e,n):
+    
+    c=fastExpo_recursive(me,e,n) 
+    # c=pow(me,e,n) 
     return c
 
-def decrypt(me):
-    # c=fastExpo_recursive(me,d,n)
-    c=pow(me,d,n) 
+def decrypt(me,d,n):
+    c=fastExpo_recursive(me,d,n)
+    # c=pow(me,d,n) 
     return c
+# generatePrime(122)
+
+
+
+p=7
+q=17
+# n=119
+# m=96
+e=89
+d=77
+
+
+# p=generatePrime(3000000)
+# q=generatePrime(3000000)
+n=p*q
+m=(p-1)*(q-1)
+e=generateE(m)
+
+d,a,b=extended_gcd(e,m)
+
+msg="post malone"
+enc=[]
+dec=[]
+
+for i in msg:   
+    enc.append(encrypt(ord(i),e,n))
+
+print(enc)
+print(e)
+for i in enc:
+    de=decrypt(i,d,n)
+    dec.append(chr(de))
+
+print(dec)
