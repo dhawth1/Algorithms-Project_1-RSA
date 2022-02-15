@@ -1,25 +1,5 @@
 import rsa
-import string
 
-
-#1. View messages
-#2. Add message as guest
-#3. Encrypt message as guest
-
-# 1. Log in as Guest
-# 2. Log in as Owner
-# 3. Exit
-
-#As Guest:
-# 1. Post message
-#   1b. Encrypt message
-# 2. Check signature
-
-#As Owner
-# 1. Post message
-# 2. Encrypt message
-# 3. Decrypt message
-# 4. Sign message
 
 message_list = []
 def add_message(message, encrypted):
@@ -56,6 +36,7 @@ while close_menu == '':
                 #Write new message into List
                 if ask_to_encrypt == 'Y':
                     add_message(new_message, ask_to_encrypt)
+                    message_list[len(message_list) - 1][1] = rsa.encryptString(message_list[len(message_list) - 1][1])
                 else:
                     add_message(new_message, ask_to_encrypt)
                 print('Message added to list\n')
@@ -68,17 +49,20 @@ while close_menu == '':
                     for i in message_list:
                         print(i[0], '|', i[1][0:15], '|', i[2], '|', i[3])
                     message_number = input('Select a message by number:\n')
-                    
-                    if message_number not in str(range(1, len(message_list)+1)):
-                        print('Not a valid selection\n')
+                    message_range = []
+                    for i in range(1,len(message_list)+1):
+                        message_range.append(str(i))
+                    while message_number not in message_range:
+                        message_number = input('Invalid input. Select a message by number:\n')
+                    message_number = int(message_number)
+                    print(message_list[message_number-1][1])
+                    if message_list[message_number-1][4] == '':
+                        print('Message has no digital signature\n')
                     else:
-                        message_number = int(message_number)
-                        print(message_list[message_number-1][1])
-                        if message_list[message_number-1][4] == '':
-                            print('Message has no digital signature\n')
-                        else:
-                            #Check the signature
-                            pass
+                        #Check the signature
+                        #
+                        #
+                        pass
 
             elif guest_inp == '3':
                 guest_inp = 'exit'
@@ -105,6 +89,7 @@ while close_menu == '':
                 #Write new message into List
                 if ask_to_encrypt == 'Y':
                     add_message(new_message, ask_to_encrypt)
+                    message_list[len(message_list) - 1][1] = rsa.encryptString(message_list[len(message_list) - 1][1])
                 else:
                     add_message(new_message, ask_to_encrypt)
                 print('Message added to list\n')
@@ -117,47 +102,59 @@ while close_menu == '':
                     for i in message_list:
                         print(i[0], '|', i[1][0:15], '|', i[2], '|', i[3])
                     message_number = input('Select a message by number:\n')
-                    if message_number == '':
-                        print('Not a valid selection\n')
-                    elif message_number not in str(range(1, len(message_list)+1)):
-                        print('Not a valid selection\n')
-                    else:
-                        message_number = int(message_number)
-                        message_op_inp = ''
-                        while message_op_inp != 'exit':
-                            print(message_list[message_number-1][1])
-                            message_op_inp = input(
-                                                        'Would you like to:\n'
-                                                        '(1) Sign this message\n'
-                                                        '(2) Encrypt this message\n'
-                                                        '(3) Decrypt this message\n'
-                                                        '(4) Delete this message\n'
-                                                        '(5) Exit Message Menu\n'
-                                                    )
-                            if message_op_inp == '1':
-                                if message_list[message_number-1][4] != '':
-                                    print('Message already has a digital signature\n')
-                                else:
-                                    #Sign Message
-                                    pass
-                            elif message_op_inp == '2':
-                                #Encrypt Message
+                    message_range = []
+                    for i in range(1,len(message_list)+1):
+                        message_range.append(str(i))
+                    while message_number not in message_range:
+                        message_number = input('Invalid input. Select a message by number:\n')
+                    message_number = int(message_number)
+                    message_op_inp = ''
+                    while message_op_inp != 'exit':
+                        print(message_list[message_number-1][1])
+                        message_op_inp = input(
+                                                    'Would you like to:\n'
+                                                    '(1) Sign this message\n'
+                                                    '(2) Encrypt this message\n'
+                                                    '(3) Decrypt this message\n'
+                                                    '(4) Delete this message\n'
+                                                    '(5) Exit Message Menu\n'
+                                                )
+                        if message_op_inp == '1':
+                            if message_list[message_number-1][4] != '':
+                                print('Message already has a digital signature\n')
+                            else:
+                                #Sign Message
+                                #
+                                #
                                 pass
-                            elif message_op_inp == '3':
-                                #Decrypt Message
-                                pass
-                            elif message_op_inp == '4':
-                                delete_check = input('Are you sure you want to delete this message? Y/N\n')[0].upper()
-                                if delete_check == 'Y':
-                                    del message_list[message_number-1]
-                                    for i in message_list:
-                                        if i[0] > message_number:
-                                            i[0] = i[0] - 1
-                                    message_op_inp = 'exit'
-                            elif message_op_inp == '5':
+                        elif message_op_inp == '2':
+                            if message_list[message_number - 1][2] == 'N':
+                                message_list[message_number - 1][1] = rsa.encryptString(message_list[message_number - 1][1])
+                                message_list[message_number - 1][2] = 'Y'
+                                print('Message encrypted:\n' + message_list[message_number - 1][1] + '\n')
                                 message_op_inp = 'exit'
                             else:
-                                print('Invalid input. Please try again.\n')
+                                print('Message was already encrypted\n')
+                        elif message_op_inp == '3':
+                            if message_list[message_number - 1][2] == 'Y':
+                                message_list[message_number - 1][1] = rsa.decryptString(message_list[message_number - 1][1])
+                                message_list[message_number - 1][2] = 'N'
+                                print('Message decrypted:\n' + message_list[message_number - 1][1] + '\n')
+                                message_op_inp = 'exit'
+                            else:
+                                print('Message is not encrypted\n')
+                        elif message_op_inp == '4':
+                            delete_check = input('Are you sure you want to delete this message? Y/N\n')[0].upper()
+                            if delete_check == 'Y':
+                                del message_list[message_number-1]
+                                for i in message_list:
+                                    if i[0] > message_number:
+                                        i[0] = i[0] - 1
+                                message_op_inp = 'exit'
+                        elif message_op_inp == '5':
+                            message_op_inp = 'exit'
+                        else:
+                            print('Invalid input. Please try again.\n')
             elif owner_inp == '3':
                 owner_inp = 'exit'
             else:
