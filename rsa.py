@@ -6,7 +6,7 @@ import random
 def generatePrime(k):
     s="1st"
     while True:
-        n = random.randint(2, 100)
+        n = random.randint(2, 200)
         if(fermatTest(n,300)):
             return n
     # Fermat's little theorem
@@ -61,41 +61,46 @@ def encrypt(me,e,n):
     # c=pow(me,e,n) 
     return c
 
+def encryptString(msg):
+    encryptedString=""
+    for i in msg:   
+        encryptedString+=(chr(encrypt(ord(i),e,n)))
+    return encryptedString   
+    
+
 def decrypt(me,d,n):
     c=fastExpo_recursive(me,d,n)
     # c=pow(me,d,n) 
     return c
-# generatePrime(122)
+
+def decryptString(msg):
+    decryptedString=""
+    for i in msg:   
+        de=decrypt(ord(i),d,n)
+        decryptedString+=chr(de)
+    return decryptedString 
 
 
 
-p=7
-q=17
-# n=119
-# m=96
-e=89
-d=77
+# test valuesss
+# p=7
+# q=17
+# e=5
+# d=77
 
 
-# p=generatePrime(3000000)
-# q=generatePrime(3000000)
+p=generatePrime(3000000)
+q=generatePrime(3000000)
 n=p*q
 m=(p-1)*(q-1)
 e=generateE(m)
 
 d,a,b=extended_gcd(e,m)
 
-msg="post malone"
-enc=[]
-dec=[]
 
-for i in msg:   
-    enc.append(encrypt(ord(i),e,n))
 
-print(enc)
+e = encryptString("post malone")
 print(e)
-for i in enc:
-    de=decrypt(i,d,n)
-    dec.append(chr(de))
 
-print(dec)
+print(decryptString(e))
+
