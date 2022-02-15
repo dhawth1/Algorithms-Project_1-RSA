@@ -4,10 +4,10 @@ import random
 
 
 def generatePrime(k):
-    s="1st"
+    
     while True:
         n = random.randint(2, 200)
-        if(fermatTest(n,300)):
+        if(fermatTest(n,k)):
             return n
     # Fermat's little theorem
             
@@ -44,7 +44,6 @@ def extended_gcd(a=1, b =1):
 
 
 def fastExpo_recursive(a, p, n):
-    ''' Returns a^p mod n '''
     if p == 0:
         return 1
     if p%2 == 0:
@@ -89,8 +88,8 @@ def decryptString(msg):
 # d=77
 
 
-p=generatePrime(3000000)
-q=generatePrime(3000000)
+p=generatePrime(1000)
+q=generatePrime(1000)
 n=p*q
 m=(p-1)*(q-1)
 e=generateE(m)
@@ -98,9 +97,5 @@ e=generateE(m)
 d,a,b=extended_gcd(e,m)
 
 
-
-e = encryptString("post malone")
-print(e)
-
-print(decryptString(e))
+print(decryptString(encryptString("It works sometimes")))
 
