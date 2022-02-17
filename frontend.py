@@ -59,11 +59,10 @@ while close_menu == '':
                     if message_list[message_number-1][4] == '':
                         print('Message has no digital signature\n')
                     else:
-                        #Check the signature
-                        #
-                        #
-                        pass
-
+                        if rsa.encryptString(message_list[message_number-1][4]) == 'Signed':
+                            print('Signature valid\n')
+                        else:
+                            print('Could not validate this signature')
             elif guest_inp == '3':
                 guest_inp = 'exit'
             else:
@@ -123,10 +122,10 @@ while close_menu == '':
                             if message_list[message_number-1][4] != '':
                                 print('Message already has a digital signature\n')
                             else:
-                                #Sign Message
-                                #
-                                #
-                                pass
+                                message_list[message_number-1][4] = rsa.decryptString('Signed')
+                                message_list[message_number-1][3] = 'Signed'
+                                print('Message signed\n')
+                            message_op_inp = 'exit'
                         elif message_op_inp == '2':
                             if message_list[message_number - 1][2] == 'N':
                                 message_list[message_number - 1][1] = rsa.encryptString(message_list[message_number - 1][1])
